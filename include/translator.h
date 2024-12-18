@@ -406,7 +406,18 @@ double evaluate(Node* node, std::map<std::string, double>& variables) {
             }
             return std::min(evaluate(node->children[0], variables), evaluate(node->children[1], variables));
         }
-
+    }
+    else if (node->token.type == Token::EQUAL)
+    {
+        if (node->children.size() == 2 && node->children[0]->token.type == Token::VARIABLE)
+        {
+            variables[node->children[0]->token.value] = evaluate(node->children[1], variables);
+            return variables[node->children[0]->token.value];
+        }
+        else
+        {
+            throw std::runtime_error("Error: invalid assignment");
+        }
     }
 
     throw std::runtime_error("Error: unknown AST node");
